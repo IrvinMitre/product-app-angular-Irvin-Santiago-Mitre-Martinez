@@ -40,7 +40,7 @@
               </button>
               <button
                 class="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded-md transition"
-                (click)="onDelete(product)">
+                (click)="confirmDelete(product)">
                 Delete
               </button>
             </div>
@@ -71,7 +71,7 @@
           Edit
         </button>
         <button class="px-3 py-1 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded-md"
-          (click)="onDelete(product)">Delete</button>
+          (click)="confirmDelete(product)">Delete</button>
       </div>
     </div>
   </div>
@@ -88,3 +88,22 @@
 <app-alert-component [show]="showAlert" [title]="alertTitle" [description]="alertDescription" [type]="alertColor"
   (closeAlert)="toggleModal()">
 </app-alert-component>
+
+<app-modal-component
+  [show]="showDeleteConfirm"
+  (modalClose)="closeDeleteModal()"
+  [title]="'Confirm Deletion'">
+  <div class="text-start mr-6">
+    <p class="text-gray-700 text-base mb-6">
+      Are you sure you want to delete <strong>{{ selectedProductToDelete?.title }}</strong>?
+    </p>
+    <div class="flex justify-end gap-4">
+      <button
+        class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+        (click)="closeDeleteModal()">Cancel</button>
+      <button
+        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+        (click)="deleteConfirmed()">Delete</button>
+    </div>
+  </div>
+</app-modal-component>

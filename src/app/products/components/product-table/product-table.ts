@@ -17,10 +17,15 @@ export class ProductTableComponent implements OnInit {
   totalPages = 0;
   loading = true;
   error = false;
+
   showAlert = false;
   alertTitle = '';
   alertDescription = '';
   alertColor: 'success' | 'error' = 'error';
+
+  showDeleteConfirm = false;
+  selectedProductToDelete?: Product;
+
   @Output() edit = new EventEmitter<Product>();
 
   ngOnInit(): void {
@@ -53,10 +58,17 @@ export class ProductTableComponent implements OnInit {
     this.edit.emit(product);
   }
 
-  onDelete(product: Product): void {
-    this.productController.deleteProduct(product.id as number).subscribe({
+  confirmDelete(product: Product): void {
+    this.selectedProductToDelete = product;
+    this.showDeleteConfirm = true;
+  }
+
+  deleteConfirmed(): void {
+    if (!this.selectedProductToDelete) return;
+
+    this.productController.deleteProduct(this.selectedProductToDelete.id as number).subscribe({
       next: () => {
-        this.products = this.products.filter((p) => p.id !== product.id);
+        this.products = this.products.filter(p => p.id !== this.selectedProductToDelete!.id);
         this.totalPages = Math.max(1, Math.ceil(this.products.length / this.itemsPerPage));
         if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
         this.setPaginatedProducts();
@@ -65,14 +77,21 @@ export class ProductTableComponent implements OnInit {
         this.alertDescription = 'The product was deleted successfully.';
         this.alertColor = 'success';
         this.showAlert = true;
+        this.closeDeleteModal();
       },
       error: () => {
         this.alertTitle = 'Error Deleting';
-        this.alertDescription = 'Something occurred deleting the product.';
+        this.alertDescription = 'Something occurred while deleting the product.';
         this.alertColor = 'error';
         this.showAlert = true;
+        this.closeDeleteModal();
       },
     });
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteConfirm = false;
+    this.selectedProductToDelete = undefined;
   }
 
   toggleModal(): void {
