@@ -1,0 +1,69 @@
+<div class="p-6">
+  <div *ngIf="loading" class="text-center text-gray-500 py-10">Loading products...</div>
+
+  <div *ngIf="!loading && error" class="text-center py-10 text-red-600 text-base">
+    Error loading products. Please try again later.
+  </div>
+
+  <div *ngIf="!loading && !error && !products.length" class="text-center py-10 text-gray-500 text-base">
+    No products available.
+  </div>
+
+  <div *ngIf="!loading && !error && products.length" class="hidden md:block overflow-x-auto">
+    <table class="w-full text-sm border border-gray-200 shadow-md rounded-lg overflow-hidden">
+      <thead class="bg-gray-50 text-left text-gray-700 font-medium">
+        <tr>
+          <th class="p-4 border-b">Image</th>
+          <th class="p-4 border-b">Title</th>
+          <th class="p-4 border-b">Category</th>
+          <th class="p-4 border-b">Price</th>
+          <th class="p-4 border-b">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products" class="hover:bg-gray-50 transition">
+          <td class="p-4 border-b">
+            <img [src]="product.image" width="80" height="80" class="object-contain mx-auto" loading="lazy"
+              [alt]="product.title" />
+          </td>
+          <td class="p-4 border-b font-medium text-gray-800">{{ product.title }}</td>
+          <td class="p-4 border-b text-gray-600 capitalize">{{ product.category }}</td>
+          <td class="p-4 border-b font-semibold text-green-600">${{ product.price }}</td>
+          <td class="p-4 border-b">
+            <div class="flex gap-2">
+              <button
+                class="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition"
+                (click)="onEdit(product)">
+                Edit
+              </button>
+              <button
+                class="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded-md transition"
+                (click)="onDelete(product)">
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!loading && !error && products.length" class="block md:hidden space-y-4">
+    <div *ngFor="let product of products" class="border rounded-lg p-4 shadow-sm">
+      <div class="flex items-center gap-4">
+        <img [src]="product.image" width="40" height="40" class="object-contain" loading="lazy" [alt]="product.title" />
+        <div>
+          <div class="font-semibold text-gray-800">{{ product.title }}</div>
+          <div class="text-gray-600 capitalize">{{ product.category }}</div>
+          <div class="text-green-600 font-medium">${{ product.price }}</div>
+        </div>
+      </div>
+      <div class="mt-4 flex gap-2 justify-end">
+        <button class="px-3 py-1 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md"
+          (click)="onEdit(product)">Edit</button>
+        <button class="px-3 py-1 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded-md"
+          (click)="onDelete(product)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
