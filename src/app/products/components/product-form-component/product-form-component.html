@@ -23,10 +23,9 @@
       class="text-red-500 text-sm mt-1">Description is required.</div>
   </label>
 
-  <label class="block text-sm font-medium text-gray-700">
+  <label class="relative block text-sm font-medium text-gray-700">
     Category
-    <select formControlName="category"
-      class="mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+    <select formControlName="category" class="mt-1 block w-full border border-gray-300 rounded-md px-4 py-2 text-sm">
       <option value="" disabled>Select a category</option>
       <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
     </select>

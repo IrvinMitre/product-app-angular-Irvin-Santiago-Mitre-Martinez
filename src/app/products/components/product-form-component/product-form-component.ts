@@ -1,4 +1,14 @@
-import { Component, ViewChild, ElementRef, inject, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  inject,
+  EventEmitter,
+  Output,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Product } from '../../../models/product.model';
 import { ProductControllerService } from '../../../services/product-controller';
@@ -9,10 +19,12 @@ import { ProductControllerService } from '../../../services/product-controller';
   styleUrl: './product-form-component.css',
   standalone: false,
 })
-export class ProductFormComponent {
+export class ProductFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
   private productController = inject(ProductControllerService);
+
   @Output() formCompleted = new EventEmitter<void>();
+  @Input() productToEdit?: Product;
 
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
 
@@ -28,6 +40,13 @@ export class ProductFormComponent {
 
   imagePreview: string | null = null;
   isSubmitting = false;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['productToEdit'] && this.productToEdit) {
+      this.productForm.patchValue(this.productToEdit);
+      this.imagePreview = this.productToEdit.image;
+    }
+  }
 
   onImageSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -57,22 +76,27 @@ export class ProductFormComponent {
     if (this.productForm.valid) {
       this.isSubmitting = true;
       this.productForm.disable();
-
       const product = this.productForm.value as Product;
 
-      this.productController.createProduct(product).subscribe({
-        next: () => {
-          this.isSubmitting = false;
-          this.productForm.enable();
-          this.imagePreview = null;
-          this.productForm.reset();
-          this.formCompleted.emit();
-        },
-        error: () => {
-          this.isSubmitting = false;
-          this.productForm.enable();
-        },
-      });
+      const finalize = () => {
+        this.isSubmitting = false;
+        this.productForm.enable();
+        this.imagePreview = null;
+        this.productForm.reset();
+        this.formCompleted.emit();
+      };
+
+      if (this.productToEdit) {
+        this.productController.updateProduct(this.productToEdit.id as number, product).subscribe({
+          next: finalize,
+          error: finalize,
+        });
+      } else {
+        this.productController.createProduct(product).subscribe({
+          next: finalize,
+          error: finalize,
+        });
+      }
     }
   }
 }

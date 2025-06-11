@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Product } from '../../models/product.model';
 
 @Component({
   selector: 'app-home-page',
@@ -11,7 +12,8 @@ export class HomePage {
   showAlert = false;
   alertTitle = '';
   alertDescription = '';
-  alertColor: 'success' | 'error' = 'success';
+  alertColor: 'success' | 'error' = 'error';
+  productToEdit: Product | undefined;
 
   toggleModal(): void {
     this.showModal = !this.showModal;
@@ -23,9 +25,17 @@ export class HomePage {
 
   toggleFormSucces(): void {
     this.showModal = false;
-    this.alertTitle = 'Product Created';
-    this.alertDescription = 'The product was successfully added.';
+    this.alertTitle = this.productToEdit ? 'Product Updated' : 'Product Created';
+    this.alertDescription = this.productToEdit
+      ? 'The product was successfully updated.'
+      : 'The product was successfully added.';
     this.alertColor = 'success';
     this.showAlert = true;
+    this.productToEdit = undefined;
+  }
+
+  onEdit(product: Product): void {
+    this.productToEdit = product;
+    this.toggleModal();
   }
 }

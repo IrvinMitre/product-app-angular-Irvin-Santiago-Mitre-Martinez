@@ -6,16 +6,15 @@
       Add Product
     </button>
   </div>
-  <app-product-table></app-product-table>
+
+  <app-product-table (edit)="onEdit($event)"></app-product-table>
+
   <app-modal-component [show]="showModal" (modalClose)="toggleModal()">
-    <app-product-form (formCompleted)="toggleFormSucces()"></app-product-form>
+    <app-product-form [productToEdit]="productToEdit" (formCompleted)="toggleFormSucces()">
+    </app-product-form>
   </app-modal-component>
 </div>
 
-<app-alert-component
-  [show]="showAlert"
-  [title]="alertTitle"
-  [description]="alertDescription"
-  [type]="alertColor"
+<app-alert-component [show]="showAlert" [title]="alertTitle" [description]="alertDescription" [type]="alertColor"
   (closeAlert)="toggleAlert()">
 </app-alert-component>

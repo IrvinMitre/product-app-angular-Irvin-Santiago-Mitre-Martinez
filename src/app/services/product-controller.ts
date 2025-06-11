@@ -18,4 +18,8 @@ export class ProductControllerService {
   deleteProduct(id: number): Observable<void> {
     return this.productsService.deleteProduct(id);
   }
+
+  updateProduct(id: number, product: Product) {
+    return this.productsService.updateProduct(id, product);
+  }
 }

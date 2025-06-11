@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { Product } from '../../../models/product.model';
 import { ProductControllerService } from '../../../services/product-controller';
 
@@ -13,7 +13,7 @@ export class ProductTableComponent implements OnInit {
   products: Product[] = [];
   paginatedProducts: Product[] = [];
   currentPage = 1;
-  itemsPerPage = 5;
+  itemsPerPage = 4;
   totalPages = 0;
   loading = true;
   error = false;
@@ -21,6 +21,7 @@ export class ProductTableComponent implements OnInit {
   alertTitle = '';
   alertDescription = '';
   alertColor: 'success' | 'error' = 'error';
+  @Output() edit = new EventEmitter<Product>();
 
   ngOnInit(): void {
     this.productController.getAllProducts().subscribe({
@@ -48,8 +49,8 @@ export class ProductTableComponent implements OnInit {
     this.setPaginatedProducts();
   }
 
-  onEdit(product: Product): void {
-    console.log('Editing product:', product);
+  onEdit(product: Product) {
+    this.edit.emit(product);
   }
 
   onDelete(product: Product): void {
@@ -74,7 +75,7 @@ export class ProductTableComponent implements OnInit {
     });
   }
 
-   toggleModal(): void {
+  toggleModal(): void {
     this.showAlert = !this.showAlert;
   }
 }
