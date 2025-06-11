@@ -9,6 +9,7 @@ import { IMAGE_CONFIG } from '@angular/common';
 import { ModalComponent } from './shared/modal-component/modal-component';
 import { ProductFormComponent } from './products/components/product-form-component/product-form-component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AlertComponent } from './shared/alert-component/alert-component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ProductTableComponent,
     ModalComponent,
     ProductFormComponent,
+    AlertComponent
   ],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
   providers: [

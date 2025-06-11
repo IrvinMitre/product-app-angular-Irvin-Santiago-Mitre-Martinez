@@ -4,6 +4,7 @@ import { of, throwError } from 'rxjs';
 import { Product } from '../../../models/product.model';
 import { faker } from '@faker-js/faker';
 import { ProductControllerService } from '../../../services/product-controller';
+import { AlertComponent } from '../../../shared/alert-component/alert-component';
 
 describe('ProductTableComponent', () => {
   let component: ProductTableComponent;
@@ -31,7 +32,7 @@ describe('ProductTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProductTableComponent],
+      declarations: [ProductTableComponent, AlertComponent],
       providers: [{ provide: ProductControllerService, useClass: MockProductControllerService }],
     }).compileComponents();
 

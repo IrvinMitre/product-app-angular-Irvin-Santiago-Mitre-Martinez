@@ -6,6 +6,7 @@ import { ProductTableComponent } from '../../products/components/product-table/p
 import { ModalComponent } from '../../shared/modal-component/modal-component';
 import { ProductFormComponent } from '../../products/components/product-form-component/product-form-component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AlertComponent } from '../../shared/alert-component/alert-component';
 
 describe('HomePage', () => {
   let component: HomePage;
@@ -13,7 +14,7 @@ describe('HomePage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HomePage, ProductTableComponent, ModalComponent, ProductFormComponent],
+      declarations: [HomePage, ProductTableComponent, ModalComponent, ProductFormComponent, AlertComponent],
       providers: [provideHttpClient()],
       imports: [ReactiveFormsModule],
     }).compileComponents();

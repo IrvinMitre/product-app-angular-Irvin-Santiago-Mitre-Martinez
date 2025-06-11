@@ -14,4 +14,8 @@ export class ProductControllerService {
   getAllProducts(): Observable<Product[]> {
     return this.productsService.getProducts();
   }
+
+  deleteProduct(id: number): Observable<void> {
+    return this.productsService.deleteProduct(id);
+  }
 }

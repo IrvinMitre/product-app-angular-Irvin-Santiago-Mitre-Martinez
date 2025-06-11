@@ -82,3 +82,11 @@
     </button>
   </div>
 </div>
+
+<app-alert-component
+  [show]="showAlert"
+  [title]="alertTitle"
+  [description]="alertDescription"
+  [type]="alertColor"
+  (closeAlert)="toggleModal()">
+</app-alert-component>

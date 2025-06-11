@@ -11,7 +11,12 @@ export class ProductsService {
   getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.baseUrl);
   }
+
   addProduct(product: Product): Observable<Product> {
     return this.http.post<Product>(this.baseUrl, product);
+  }
+
+  deleteProduct(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

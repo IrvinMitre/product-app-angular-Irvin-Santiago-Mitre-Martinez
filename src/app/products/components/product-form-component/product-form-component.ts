@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, inject } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Product } from '../../../models/product.model';
 import { ProductControllerService } from '../../../services/product-controller';
@@ -12,6 +12,7 @@ import { ProductControllerService } from '../../../services/product-controller';
 export class ProductFormComponent {
   private fb = inject(FormBuilder);
   private productController = inject(ProductControllerService);
+  @Output() formCompleted = new EventEmitter<void>();
 
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
 
@@ -64,6 +65,8 @@ export class ProductFormComponent {
           this.isSubmitting = false;
           this.productForm.enable();
           this.imagePreview = null;
+          this.productForm.reset();
+          this.formCompleted.emit();
         },
         error: () => {
           this.isSubmitting = false;
