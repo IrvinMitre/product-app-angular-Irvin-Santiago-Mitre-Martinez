@@ -1,15 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProductTableComponent } from './product-table';
-import { ProductsService } from '../../../services/products';
-import { provideHttpClient } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { Product } from '../../../models/product.model';
 import { faker } from '@faker-js/faker';
+import { ProductControllerService } from '../../../services/product-controller';
 
 describe('ProductTableComponent', () => {
   let component: ProductTableComponent;
   let fixture: ComponentFixture<ProductTableComponent>;
-  let productsService: ProductsService;
+  let productController: ProductControllerService;
 
   const generateMockProduct = (): Product => ({
     id: faker.number.int({ min: 1, max: 1000 }),
@@ -19,22 +18,26 @@ describe('ProductTableComponent', () => {
     description: faker.commerce.productDescription(),
     image: faker.image.url(),
     rating: {
-      rate: parseFloat(faker.number.float({ min: 1, max: 5}).toFixed(1)),
+      rate: parseFloat(faker.number.float({ min: 1, max: 5 }).toFixed(1)),
       count: faker.number.int({ min: 1, max: 1000 }),
     },
   });
 
   const mockProducts: Product[] = [generateMockProduct(), generateMockProduct()];
 
+  class MockProductControllerService {
+    getAllProducts = jasmine.createSpy().and.returnValue(of(mockProducts));
+  }
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ProductTableComponent],
-      providers: [provideHttpClient()],
+      providers: [{ provide: ProductControllerService, useClass: MockProductControllerService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProductTableComponent);
     component = fixture.componentInstance;
-    productsService = TestBed.inject(ProductsService);
+    productController = TestBed.inject(ProductControllerService);
   });
 
   it('should create', () => {
@@ -42,17 +45,18 @@ describe('ProductTableComponent', () => {
   });
 
   it('should load products on init', () => {
-    spyOn(productsService, 'getProducts').and.returnValue(of(mockProducts));
-
     component.ngOnInit();
 
+    expect(productController.getAllProducts).toHaveBeenCalled();
     expect(component.loading).toBeFalse();
     expect(component.products.length).toBe(2);
     expect(component.error).toBeFalse();
   });
 
   it('should set error to true on API failure', () => {
-    spyOn(productsService, 'getProducts').and.returnValue(throwError(() => new Error('API error')));
+    (productController.getAllProducts as jasmine.Spy).and.returnValue(
+      throwError(() => new Error('API error')),
+    );
 
     component.ngOnInit();
 

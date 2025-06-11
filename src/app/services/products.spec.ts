@@ -23,9 +23,10 @@ describe('ProductsService (manual HttpClient mock)', () => {
   });
 
   const mockProducts: Product[] = [generateMockProduct(), generateMockProduct()];
+  const newProduct: Product = generateMockProduct();
 
   beforeEach(() => {
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'post']);
 
     TestBed.configureTestingModule({
       providers: [ProductsService, { provide: HttpClient, useValue: httpClientSpy }],
@@ -47,5 +48,18 @@ describe('ProductsService (manual HttpClient mock)', () => {
     });
 
     expect(httpClientSpy.get).toHaveBeenCalledOnceWith('https://fakestoreapi.com/products');
+  });
+
+  it('should add a new product via POST', () => {
+    httpClientSpy.post.and.returnValue(of(newProduct));
+
+    service.addProduct(newProduct).subscribe((result) => {
+      expect(result).toEqual(newProduct);
+    });
+
+    expect(httpClientSpy.post).toHaveBeenCalledOnceWith(
+      'https://fakestoreapi.com/products',
+      newProduct,
+    );
   });
 });

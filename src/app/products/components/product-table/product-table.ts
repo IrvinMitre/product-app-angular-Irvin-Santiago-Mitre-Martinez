@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ProductsService } from '../../../services/products';
 import { Product } from '../../../models/product.model';
+import { ProductControllerService } from '../../../services/product-controller';
 
 @Component({
   selector: 'app-product-table',
@@ -9,7 +9,7 @@ import { Product } from '../../../models/product.model';
   standalone: false,
 })
 export class ProductTableComponent implements OnInit {
-  private productsService = inject(ProductsService);
+  private productController = inject(ProductControllerService);
   products: Product[] = [];
   paginatedProducts: Product[] = [];
   currentPage = 1;
@@ -19,7 +19,7 @@ export class ProductTableComponent implements OnInit {
   error = false;
 
   ngOnInit(): void {
-    this.productsService.getProducts().subscribe({
+    this.productController.getAllProducts().subscribe({
       next: (data) => {
         this.products = data;
         this.totalPages = Math.ceil(this.products.length / this.itemsPerPage);

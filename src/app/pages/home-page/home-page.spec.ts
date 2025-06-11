@@ -3,6 +3,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomePage } from './home-page';
 import { provideHttpClient } from '@angular/common/http';
 import { ProductTableComponent } from '../../products/components/product-table/product-table';
+import { ModalComponent } from '../../shared/modal-component/modal-component';
+import { ProductFormComponent } from '../../products/components/product-form-component/product-form-component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('HomePage', () => {
   let component: HomePage;
@@ -10,8 +13,9 @@ describe('HomePage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HomePage, ProductTableComponent],
+      declarations: [HomePage, ProductTableComponent, ModalComponent, ProductFormComponent],
       providers: [provideHttpClient()],
+      imports: [ReactiveFormsModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomePage);
