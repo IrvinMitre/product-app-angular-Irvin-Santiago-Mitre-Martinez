@@ -4,32 +4,27 @@ import { ProductsService } from '../../../services/products';
 import { provideHttpClient } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { Product } from '../../../models/product.model';
+import { faker } from '@faker-js/faker';
 
 describe('ProductTableComponent', () => {
   let component: ProductTableComponent;
   let fixture: ComponentFixture<ProductTableComponent>;
   let productsService: ProductsService;
 
-  const mockProducts: Product[] = [
-    {
-      id: 1,
-      title: 'Test Product 1',
-      price: 99.99,
-      category: 'electronics',
-      description: 'test description',
-      image: 'https://example.com/img1.jpg',
-      rating: { rate: 4.5, count: 100 },
+  const generateMockProduct = (): Product => ({
+    id: faker.number.int({ min: 1, max: 1000 }),
+    title: faker.commerce.productName(),
+    price: parseFloat(faker.commerce.price()),
+    category: faker.helpers.arrayElement(['electronics', 'clothing', 'jewelery', 'books']),
+    description: faker.commerce.productDescription(),
+    image: faker.image.url(),
+    rating: {
+      rate: parseFloat(faker.number.float({ min: 1, max: 5}).toFixed(1)),
+      count: faker.number.int({ min: 1, max: 1000 }),
     },
-    {
-      id: 2,
-      title: 'Test Product 2',
-      price: 49.99,
-      category: 'clothing',
-      description: 'test description 2',
-      image: 'https://example.com/img2.jpg',
-      rating: { rate: 3.8, count: 50 },
-    },
-  ];
+  });
+
+  const mockProducts: Product[] = [generateMockProduct(), generateMockProduct()];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
