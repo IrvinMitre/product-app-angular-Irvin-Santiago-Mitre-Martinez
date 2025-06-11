@@ -11,11 +11,37 @@ import { Product } from '../../../models/product.model';
 export class ProductTableComponent implements OnInit {
   private productsService = inject(ProductsService);
   products: Product[] = [];
+  paginatedProducts: Product[] = [];
+  currentPage = 1;
+  itemsPerPage = 5;
+  totalPages = 0;
   loading = true;
   error = false;
 
-  round(value: number): number {
-    return Math.round(value);
+  ngOnInit(): void {
+    this.productsService.getProducts().subscribe({
+      next: (data) => {
+        this.products = data;
+        this.totalPages = Math.ceil(this.products.length / this.itemsPerPage);
+        this.setPaginatedProducts();
+        this.loading = false;
+      },
+      error: () => {
+        this.error = true;
+        this.loading = false;
+      },
+    });
+  }
+
+  setPaginatedProducts(): void {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.paginatedProducts = this.products.slice(start, end);
+  }
+
+  changePage(page: number): void {
+    this.currentPage = page;
+    this.setPaginatedProducts();
   }
 
   onEdit(product: Product): void {
@@ -24,18 +50,5 @@ export class ProductTableComponent implements OnInit {
 
   onDelete(product: Product): void {
     console.log('Deleting product:', product);
-  }
-
-  ngOnInit(): void {
-    this.productsService.getProducts().subscribe({
-      next: (data) => {
-        this.products = data;
-        this.loading = false;
-      },
-      error: () => {
-        this.error = true;
-        this.loading = false;
-      },
-    });
   }
 }
